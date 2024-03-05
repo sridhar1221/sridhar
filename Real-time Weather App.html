@@ -1,0 +1,79 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en" ng-app="weatherApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Weather App</title>
+    <style type="text/css">
+        
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.weather-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+}
+
+p {
+    margin: 10px 0;
+    color: #555;
+}
+
+    </style>
+</head>
+<body ng-controller="WeatherController">
+
+    <div class="weather-container">
+        <h1>{{ city }} Weather</h1>
+        <p>Temperature: {{ temperature }}°C</p>
+        <p>Condition: {{ condition }}</p>
+        <p>Humidity: {{ humidity }}%</p>
+        <p>Wind Speed: {{ windSpeed }} m/s</p>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        
+var app = angular.module('weatherApp', []);
+
+app.controller('WeatherController', function($scope, $http, $interval) {
+    $scope.city = "Coimbatore"; 
+    $scope.getWeatherData = function() {
+        var apiKey = "YOUR_API_KEY"; 
+        var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + $scope.city + "&appid=" + apiKey;
+
+        $http.get(apiUrl)
+            .then(function(response) {
+                var weatherData = response.data;
+                $scope.temperature = (weatherData.main.temp - 273.15).toFixed(2); 
+                $scope.condition = weatherData.weather[0].description;
+                $scope.humidity = weatherData.main.humidity;
+                $scope.windSpeed = weatherData.wind.speed;
+            }, function(error) {
+                console.error("Error fetching weather data:", error);
+            });
+    };
+    $scope.getWeatherData();
+    $interval(function() {
+        $scope.getWeatherData();
+    }, 300000);  
+});
+
+    </script>
+</body>
+</html>
