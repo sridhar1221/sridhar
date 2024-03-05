@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="authApp">
+<head>
+    <meta charset="UTF-8">
+    <title>User Authentication</title>
+    <style type="text/css">
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 50%;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 20px 0;
+}
+    </style>
+</head>
+<body ng-controller="AuthController as authCtrl">
+
+    <div class="container">
+        <h2>User Authentication System</h2>
+
+        <div ng-show="!authCtrl.isAuthenticated">
+            <form ng-submit="authCtrl.signup()">
+                <h3>Sign Up</h3>
+                <label for="signupUsername">Username:</label>
+                <input type="text" id="signupUsername" ng-model="authCtrl.signupUsername" required>
+                
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" ng-model="authCtrl.signupPassword" required>
+                
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <hr>
+
+            <form ng-submit="authCtrl.login()">
+                <h3>Login</h3>
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" ng-model="authCtrl.loginUsername" required>
+                
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" ng-model="authCtrl.loginPassword" required>
+                
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <div ng-show="authCtrl.isAuthenticated">
+            <h3>Welcome, {{authCtrl.currentUser}}!</h3>
+            <button ng-click="authCtrl.logout()">Logout</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var authApp = angular.module('authApp', []);
+
+authApp.controller('AuthController', function() {
+    var authCtrl = this;
+
+    authCtrl.isAuthenticated = false;
+    authCtrl.currentUser = '';
+
+    authCtrl.signup = function() {
+        console.log('Signing up:', authCtrl.signupUsername);
+    };
+
+    authCtrl.login = function() {
+        console.log('Logging in:', authCtrl.loginUsername);
+        
+        authCtrl.isAuthenticated = true;
+        authCtrl.currentUser = authCtrl.loginUsername;
+    };
+
+    authCtrl.logout = function() {
+     
+        console.log('Logging out');
+        authCtrl.isAuthenticated = false;
+        authCtrl.currentUser = '';
+    };
+});
+    </script>
+</body>
+</html>
