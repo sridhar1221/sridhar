@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngularJS Quiz App</title>
+    <style type="text/css">
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+    </style>
+</head>
+<body>
+
+<div ng-controller="QuizController">
+    <h1>{{ quiz.title }}</h1>
+    <div ng-show="!quizCompleted">
+        <div ng-repeat="question in quiz.questions">
+            <h2>{{ question.text }}</h2>
+            <ul>
+                <li ng-repeat="option in question.options">
+                    <label>
+                        <input type="radio" ng-model="userAnswers[question.id]" ng-value="option">
+                        {{ option }}
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <button ng-click="submitQuiz()">Submit</button>
+    </div>
+    <div ng-show="quizCompleted">
+        <h2>Your Score: {{ userScore }}/{{ quiz.questions.length }}</h2>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+<script>
+    var app = angular.module('quizApp', []);
+
+app.controller('QuizController', function($scope) {
+    $scope.quiz = {
+        title: 'AngularJS Quiz',
+        questions: [
+            {
+                id: 1,
+                text: 'What is AngularJS?',
+                options: ['A JavaScript framework', 'A programming language', 'A database', 'A web browser']
+            },
+            {
+                id: 2,
+                text: 'Which directive is used for two-way data binding?',
+                options: ['ng-bind', 'ng-model', 'ng-repeat', 'ng-if']
+            },
+           
+        ]
+    };
+
+    $scope.userAnswers = {};
+    $scope.userScore = 0;
+    $scope.quizCompleted = false;
+
+    $scope.submitQuiz = function() {
+        $scope.userScore = 0;
+
+        for (var i = 0; i < $scope.quiz.questions.length; i++) {
+            var question = $scope.quiz.questions[i];
+            var userAnswer = $scope.userAnswers[question.id];
+
+            if (userAnswer && userAnswer === question.options[0]) {
+                $scope.userScore++;
+            }
+        }
+
+        $scope.quizCompleted = true;
+    };
+});
+
+</script>
+</body>
+</html>
