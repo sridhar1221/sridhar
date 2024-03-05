@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="productCatalogApp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Catalog</title>
+  <style type="text/css">
+    body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+section {
+  margin-bottom: 20px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px;
+  width: 300px;
+}
+
+select {
+  padding: 5px;
+  margin-left: 10px;
+}
+
+  </style>
+</head>
+
+<body ng-controller="ProductCatalogController">
+  <header>
+    <h1>Product Catalog</h1>
+  </header>
+
+  <section>
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter" ng-model="selectedCategory" ng-change="filterProducts()">
+      <option value="">All Categories</option>
+      <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+    </select>
+  </section>
+
+  <section class="product-list">
+    <div class="product" ng-repeat="product in filteredProducts">
+      <h2>{{product.name}}</h2>
+      <p>Category: {{product.category}}</p>
+      <p>Features: {{product.features.join(', ')}}</p>
+    </div>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    var app = angular.module('productCatalogApp', []);
+
+app.controller('ProductCatalogController', function ($scope) {
+  $scope.categories = ["Electronics", "Clothing", "Books"];
+
+  $scope.products = [
+    { name: "Laptop", category: "Electronics", features: ["16GB RAM", "256GB SSD", "Intel i7"] },
+    { name: "T-shirt", category: "Clothing", features: ["Cotton", "Short Sleeve", "Blue"] },
+    { name: "Book: AngularJS Guide", category: "Books", features: ["Author: John Doe", "Paperback", "200 Pages"] },
+    // Add more products as needed
+  ];
+
+  $scope.selectedCategory = "";
+  $scope.filteredProducts = angular.copy($scope.products);
+
+  $scope.filterProducts = function () {
+    if ($scope.selectedCategory === "") {
+      $scope.filteredProducts = angular.copy($scope.products);
+    } else {
+      $scope.filteredProducts = $scope.products.filter(function (product) {
+        return product.category === $scope.selectedCategory;
+      });
+    }
+  };
+});
+
+  </script>
+</body>
+
+</html>
